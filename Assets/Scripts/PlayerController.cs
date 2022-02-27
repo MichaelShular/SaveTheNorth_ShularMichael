@@ -18,6 +18,10 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRigidbody;
     private GameObject currentFloorTouch;
+    Animator playerAnimator;
+
+    public readonly int isRunningHash = Animator.StringToHash("isRunning");
+    public readonly int isJumpingHash = Animator.StringToHash("isJumping");
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +29,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
         canCollect = true;
         isJumping = false;
-
+        playerAnimator = GetComponentInChildren<Animator>();
         gameUIController = GameObject.Find("GameCanvas");
     }
 
@@ -40,6 +44,7 @@ public class PlayerController : MonoBehaviour
         if (!(inputVector.magnitude > 0))
         {
             moveDirection = Vector3.zero;
+            
         }
 
         moveDirection = new Vector3(inputVector.x, 0, inputVector.y);
@@ -49,6 +54,11 @@ public class PlayerController : MonoBehaviour
         if (moveDirection != Vector3.zero && Time.timeScale == 1)
         {
             transform.forward = new Vector3(inputVector.x, 0, inputVector.y);
+            playerAnimator.SetBool(isRunningHash, true);
+        }
+        else
+        {
+            playerAnimator.SetBool(isRunningHash, false);
         }
     }
     private void CollectionUpdate()
@@ -69,6 +79,8 @@ public class PlayerController : MonoBehaviour
         if (isJumping) return;
         playerRigidbody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
         isJumping = true;
+        playerAnimator.SetBool(isJumpingHash, true);
+
     }
     public void OnCollect(InputValue value)
     {
@@ -89,6 +101,8 @@ public class PlayerController : MonoBehaviour
 
         if (!isJumping) return;
         isJumping = false;
+        playerAnimator.SetBool(isJumpingHash, false);
+
     }
 
     IEnumerator collectionCoolDown()
