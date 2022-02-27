@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
         var temp = GameObject.FindGameObjectWithTag("Ground");
         if (temp != null)
         {
-            transform.position = temp.transform.position + Vector3.up * 5;
+            transform.position = temp.transform.parent.transform.parent.transform.position + Vector3.up * 5;
         }
         else
         {

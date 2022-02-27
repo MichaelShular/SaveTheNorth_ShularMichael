@@ -19,10 +19,9 @@ public class FloorController : MonoBehaviour
     {
         
     }
-
     public void DecreaseFloorSize()
     {
-        transform.localScale *= decreaseAmount;
+        transform.parent.transform.parent.localScale *= decreaseAmount;
         decreaseAmountCount++;
         if(decreaseAmountCount > amountOFCollectionsPossible)
         {
