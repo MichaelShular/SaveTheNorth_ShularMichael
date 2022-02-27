@@ -8,16 +8,20 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10;
     public float jumpForce = 5;
     private bool isJumping;
-    private  Vector3 moveDirection = Vector3.zero;
+    private bool canCollect;
+    private bool collectionButtonPress;
+
+    private Vector3 moveDirection = Vector3.zero;
     private Vector2 inputVector = Vector2.zero;
 
     private Rigidbody playerRigidbody;
+    private GameObject currentFloorTouch;
 
     // Start is called before the first frame update
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
-
+        canCollect = true;
         isJumping = false;
     }
 
@@ -25,6 +29,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         MovementUpdate();
+        CollectionUpdate();
+        Debug.Log(canCollect);
     }
 
     private void MovementUpdate()
@@ -43,6 +49,15 @@ public class PlayerController : MonoBehaviour
             transform.forward = new Vector3(inputVector.x, 0, inputVector.y);
         }
     }
+    private void CollectionUpdate()
+    {
+        if(canCollect && collectionButtonPress)
+        {
+            canCollect = false;
+            currentFloorTouch.GetComponent<FloorController>().DecreaseFloorSize();
+            StartCoroutine(collectionCoolDown());
+        }
+    }
     public void OnMovement(InputValue value)
     {
         inputVector = value.Get<Vector2>();
@@ -54,9 +69,23 @@ public class PlayerController : MonoBehaviour
         playerRigidbody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
         isJumping = true;
     }
+
+    public void OnCollect(InputValue value)
+    {
+        collectionButtonPress = value.isPressed;
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Ground") && !isJumping) return;
+        if (!collision.gameObject.CompareTag("Ground")) return;
+        currentFloorTouch = collision.gameObject;
+
+        if (!isJumping) return;
         isJumping = false;
+    }
+
+    IEnumerator collectionCoolDown()
+    {
+        yield return new WaitForSeconds(5);
+        canCollect = true;
     }
 }

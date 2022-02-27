@@ -49,7 +49,7 @@
                     "name": "",
                     "id": "f5c35c5e-1c84-4cc4-802c-1111a1a1328e",
                     "path": "<Keyboard>/c",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
                     "action": "Collect",
