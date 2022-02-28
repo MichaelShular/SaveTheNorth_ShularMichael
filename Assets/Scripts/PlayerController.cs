@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     private GameObject currentFloorTouch;
     Animator playerAnimator;
 
+    public AudioSource jumpSound;
+
     public readonly int isRunningHash = Animator.StringToHash("isRunning");
     public readonly int isJumpingHash = Animator.StringToHash("isJumping");
 
@@ -80,7 +82,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
         isJumping = true;
         playerAnimator.SetBool(isJumpingHash, true);
-
+        jumpSound.Play();
     }
     public void OnCollect(InputValue value)
     {
