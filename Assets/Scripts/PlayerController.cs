@@ -8,8 +8,10 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10;
     public float jumpForce = 5;
     private bool isJumping;
+    private bool canShoot;
     private bool canCollect;
     private bool collectionButtonPress;
+    private bool shootButtonPress;
 
     private GameObject gameUIController;
 
@@ -21,6 +23,8 @@ public class PlayerController : MonoBehaviour
     Animator playerAnimator;
 
     public AudioSource jumpSound;
+    public GameObject snowball;
+    public Transform snowballSpawnPos;
 
     public readonly int isRunningHash = Animator.StringToHash("isRunning");
     public readonly int isJumpingHash = Animator.StringToHash("isJumping");
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody>();
         canCollect = true;
+        canShoot = true;
         isJumping = false;
         playerAnimator = GetComponentInChildren<Animator>();
         gameUIController = GameObject.Find("GameCanvas");
@@ -40,6 +45,7 @@ public class PlayerController : MonoBehaviour
     {
         MovementUpdate();
         CollectionUpdate();
+        ShootUpdate();
     }
     private void MovementUpdate()
     {
@@ -72,6 +78,17 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(collectionCoolDown());
         }
     }
+    private void ShootUpdate()
+    {
+        if(canShoot && shootButtonPress)
+        {
+            canShoot = false;
+            var temp = Instantiate(snowball);
+            temp.transform.position = snowballSpawnPos.position;
+            temp.GetComponent<SnowballController>().moveDirection = transform.forward;
+            StartCoroutine(shootCoolDown());
+        }
+    }
     public void OnMovement(InputValue value)
     {
         inputVector = value.Get<Vector2>();
@@ -96,6 +113,11 @@ public class PlayerController : MonoBehaviour
             gameUIController.GetComponent<GameUIController>().pauseGame();
         }
     }
+
+    public void OnShoot(InputValue value)
+    {
+        shootButtonPress = value.isPressed;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Ground")) return;
@@ -113,6 +135,11 @@ public class PlayerController : MonoBehaviour
         canCollect = true;
     }
 
+    IEnumerator shootCoolDown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canShoot = true;
+    }
     public void RespawnPlayer()
     {
         var temp = GameObject.FindGameObjectWithTag("Ground");
