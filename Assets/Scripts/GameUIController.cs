@@ -9,10 +9,15 @@ public class GameUIController : MonoBehaviour
     public Canvas _pauseCanvas;
     public Canvas _gameStateCanvas;
     public TextMeshProUGUI _UIMessage;
+    public TextMeshProUGUI _UINumberOfEnemiesToKill;
+    public TextMeshProUGUI _UILives;
+    private int numberOfEnemiesKilled;
+    public int numberOfEnemiesToKill;
 
     private void Start()
     {
         Time.timeScale = 1;
+        numberOfEnemiesKilled = 0;
     }
     public void unPauseGame()
     {
@@ -32,11 +37,22 @@ public class GameUIController : MonoBehaviour
     {
         _gameStateCanvas.enabled = true;
         _UIMessage.text = message;
+        Time.timeScale = 0;
     }
 
     public void pauseGame()
     {
         _pauseCanvas.enabled = true;
         Time.timeScale = 0;
+    }
+
+    public void EnemyKilled()
+    {
+        numberOfEnemiesKilled++;
+        _UINumberOfEnemiesToKill.text = "Left: " + (numberOfEnemiesToKill - numberOfEnemiesKilled).ToString();
+        if(numberOfEnemiesKilled >= numberOfEnemiesToKill)
+        {
+            openGameStateCanvas("Winner");
+        }
     }
 }

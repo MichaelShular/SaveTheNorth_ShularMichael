@@ -16,6 +16,9 @@ public class AiController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(player.position);
+        if (agent.isOnNavMesh)
+        {
+            agent.SetDestination(player.position);
+        }
     }
 }

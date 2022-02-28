@@ -6,10 +6,15 @@ public class SnowballController : MonoBehaviour
 {
     public float ballSpeed;
     public Vector3 moveDirection = Vector3.zero;
+    private GameObject enemySpawner;
+    private GameObject UIController;
+    public AudioSource snowballHitSound;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemySpawner = GameObject.Find("EnemySpawner");
+        UIController = GameObject.Find("GameCanvas");
     }
 
     // Update is called once per frame
@@ -23,9 +28,12 @@ public class SnowballController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            enemySpawner.GetComponent<EnemySpawnerController>().currentNumberOfEnemys--;
+            UIController.GetComponent<GameUIController>().EnemyKilled();
+            snowballHitSound.Play();
             Destroy(collision.gameObject);
         }
-        Debug.Log("hit");
+        //Debug.Log("hit");
         Destroy(this.gameObject);
     }
 

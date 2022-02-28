@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 10;
     public float jumpForce = 5;
+    public float numberOfLives;
     public float maxNumberOfSnowballs;
     public float currentNumberOfSnowballs;
     private bool isJumping;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     Animator playerAnimator;
 
     public AudioSource jumpSound;
+    public AudioSource throwSnowballSound;
     public GameObject snowball;
     public Transform snowballSpawnPos;
     public Slider snowBar;
@@ -95,6 +97,7 @@ public class PlayerController : MonoBehaviour
             temp.transform.position = snowballSpawnPos.position;
             temp.GetComponent<SnowballController>().moveDirection = transform.forward;
             currentNumberOfSnowballs--;
+            throwSnowballSound.Play();
             StartCoroutine(shootCoolDown());
         }
     }
@@ -134,6 +137,15 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            numberOfLives--;
+            gameUIController.GetComponent<GameUIController>()._UILives.text = numberOfLives.ToString();
+            if (numberOfLives < 1)
+            {
+                gameUIController.GetComponent<GameUIController>().openGameStateCanvas("No lives left \n You Lose");
+            }
+        }
         if (!collision.gameObject.CompareTag("Ground")) return;
         currentFloorTouch = collision.gameObject;
 
@@ -160,6 +172,12 @@ public class PlayerController : MonoBehaviour
         if (temp != null)
         {
             transform.position = temp.transform.parent.transform.parent.transform.position + Vector3.up * 5;
+            numberOfLives--;
+            gameUIController.GetComponent<GameUIController>()._UILives.text = numberOfLives.ToString();
+            if (numberOfLives < 1)
+            {
+                gameUIController.GetComponent<GameUIController>().openGameStateCanvas("No lives left \n You Lose");
+            }
         }
         else
         {
