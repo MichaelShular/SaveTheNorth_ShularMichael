@@ -7,8 +7,8 @@ using TMPro;
 public class MainMenuUIController : MonoBehaviour
 {
     public Canvas _controlsCanvas;
-    public Canvas _GamePlayCanvas;
-    public Canvas _CreditsCanvas;
+    public GameObject _GamePlayCanvas;
+    public GameObject _CreditsCanvas;
     public GameObject BackButton;
 
     // Start is called before the first frame update
@@ -30,8 +30,8 @@ public class MainMenuUIController : MonoBehaviour
     public void BackToMenuGame()
     {
         _controlsCanvas.enabled = false;
-        _CreditsCanvas.enabled = false;
-        _GamePlayCanvas.enabled = false;
+        _CreditsCanvas.SetActive(false);
+        _GamePlayCanvas.SetActive(false);
         BackButton.SetActive(false);
     }
     public void QuitGame()
@@ -46,13 +46,13 @@ public class MainMenuUIController : MonoBehaviour
 
     public void OpenCredits()
     {
-        _CreditsCanvas.enabled = true;
+        _CreditsCanvas.SetActive(true);
         BackButton.SetActive(true);
     }
 
     public void OpenGameCanvas()
     {
-        _GamePlayCanvas.enabled = true;
+        _GamePlayCanvas.SetActive(true);
         BackButton.SetActive(true);
     }
 }
