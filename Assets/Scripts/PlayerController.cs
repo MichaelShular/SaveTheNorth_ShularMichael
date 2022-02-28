@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public float movementSpeed = 10;
     public float jumpForce = 5;
+    public float maxNumberOfSnowballs;
+    public float currentNumberOfSnowballs;
     private bool isJumping;
     private bool canShoot;
     private bool canCollect;
@@ -25,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource jumpSound;
     public GameObject snowball;
     public Transform snowballSpawnPos;
+    public Slider snowBar;
 
     public readonly int isRunningHash = Animator.StringToHash("isRunning");
     public readonly int isJumpingHash = Animator.StringToHash("isJumping");
@@ -38,6 +41,8 @@ public class PlayerController : MonoBehaviour
         isJumping = false;
         playerAnimator = GetComponentInChildren<Animator>();
         gameUIController = GameObject.Find("GameCanvas");
+        snowBar.maxValue = maxNumberOfSnowballs;
+        snowBar.value = currentNumberOfSnowballs;
     }
 
     // Update is called once per frame
@@ -46,6 +51,8 @@ public class PlayerController : MonoBehaviour
         MovementUpdate();
         CollectionUpdate();
         ShootUpdate();
+        //UI updates last 
+        UIUpdate();
     }
     private void MovementUpdate()
     {
@@ -71,23 +78,30 @@ public class PlayerController : MonoBehaviour
     }
     private void CollectionUpdate()
     {
-        if(canCollect && collectionButtonPress)
+        if(canCollect && collectionButtonPress && currentNumberOfSnowballs < maxNumberOfSnowballs)
         {
             canCollect = false;
             currentFloorTouch.GetComponent<FloorController>().DecreaseFloorSize();
+            currentNumberOfSnowballs++;
             StartCoroutine(collectionCoolDown());
         }
     }
     private void ShootUpdate()
     {
-        if(canShoot && shootButtonPress)
+        if(canShoot && shootButtonPress && currentNumberOfSnowballs > 0)
         {
             canShoot = false;
             var temp = Instantiate(snowball);
             temp.transform.position = snowballSpawnPos.position;
             temp.GetComponent<SnowballController>().moveDirection = transform.forward;
+            currentNumberOfSnowballs--;
             StartCoroutine(shootCoolDown());
         }
+    }
+
+    private void UIUpdate()
+    {
+        snowBar.value = currentNumberOfSnowballs;
     }
     public void OnMovement(InputValue value)
     {
