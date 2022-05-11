@@ -1,0 +1,31 @@
+Models
+Meshtint Free Santa Claus
+by: Meshtint Studio
+https://assetstore.unity.com/packages/3d/characters/meshtint-free-santa-claus-106193
+
+
+Free Voxel Christmas Pack
+by: Aiden Art
+https://assetstore.unity.com/packages/3d/environments/free-voxel-christmas-pack-209907
+
+
+UI
+Manager interface mobile game 
+by: BZ
+https://assetstore.unity.com/packages/tools/gui/manager-interface-mobile-game-168565
+
+
+Animations
+All 3-D model animations pull from 
+https://www.mixamo.com
+
+
+SFX
+Made through using chiptone
+https://sfbgames.itch.io/chiptone
+
+
+BGM
+Gangsta Christmas 
+by: envirOmaniac2
+https://freesound.org/people/envirOmaniac2/sounds/478570/
